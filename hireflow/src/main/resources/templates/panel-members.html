@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hireflow - Interview Panel</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #172b4d;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #172b4d;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #2f6df6;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #dbe4f2;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2f6df6;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .topbar p {
+            color: #718096;
+            font-size: 15px;
+        }
+
+        .admin {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            font-weight: bold;
+        }
+
+        /* FORM */
+
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d7dee9;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus {
+            border-color: #2f6df6;
+        }
+
+        .button-row {
+            margin-top: 20px;
+        }
+
+        .primary-button {
+            border: none;
+            background: #2f6df6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .primary-button:hover {
+            background: #1f56d1;
+        }
+
+        /* TABLE */
+
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            text-align: left;
+            color: #718096;
+            font-size: 13px;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 14px;
+        }
+
+        .delete-button {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .delete-button:hover {
+            background: #fecaca;
+        }
+
+        .empty {
+            text-align: center;
+            color: #718096;
+            padding: 35px;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .menu a {
+                font-size: 11px;
+                padding: 12px 5px;
+                text-align: center;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 20px;
+            }
+
+            .topbar h1 {
+                font-size: 25px;
+            }
+
+            .admin {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Hire<span>flow</span>
+        </div>
+
+        <div class="menu">
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/jobs">
+                Job Openings
+            </a>
+
+            <a href="/applicants">
+                Applicants
+            </a>
+
+            <a href="/panel-members" class="active">
+                Interview Panel
+            </a>
+
+            <a href="/interviews">
+                Interviews
+            </a>
+
+            <a href="/feedback">
+                Feedback
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Interview Panel
+                </h1>
+
+                <p>
+                    Manage interviewers and panel members
+                </p>
+
+            </div>
+
+            <div class="admin">
+                Admin
+            </div>
+
+        </div>
+
+
+        <!-- ADD PANEL MEMBER -->
+
+        <div class="form-card">
+
+            <h2 class="section-title">
+                Add Panel Member
+            </h2>
+
+            <form id="panelForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="name">
+                            Full Name
+                        </label>
+
+                        <input
+                                type="text"
+                                id="name"
+                                placeholder="Enter panel member name"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email
+                        </label>
+
+                        <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter email address"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="department">
+                            Department
+                        </label>
+
+                        <input
+                                type="text"
+                                id="department"
+                                placeholder="Enter department"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="role">
+                            Role
+                        </label>
+
+                        <input
+                                type="text"
+                                id="role"
+                                placeholder="Enter role"
+                                required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                            type="submit"
+                            class="primary-button"
+                    >
+                        Add Panel Member
+                    </button>
+
+                </div>
+
+
+                <div
+                        id="message"
+                        class="message"
+                ></div>
+
+            </form>
+
+        </div>
+
+
+        <!-- PANEL MEMBERS TABLE -->
+
+        <div class="table-card">
+
+            <h2 class="section-title">
+                Panel Members
+            </h2>
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Department
+                    </th>
+
+                    <th>
+                        Role
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="panelTable">
+
+                <tr>
+
+                    <td
+                            colspan="6"
+                            class="empty"
+                    >
+                        Loading panel members...
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const panelForm =
+        document.getElementById(
+            "panelForm"
+        );
+
+    const panelTable =
+        document.getElementById(
+            "panelTable"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    /* LOAD PANEL MEMBERS */
+
+    async function loadPanelMembers() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/panel-members"
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load panel members"
+                );
+
+            }
+
+
+            const members =
+                await response.json();
+
+
+            panelTable.innerHTML = "";
+
+
+            if (members.length === 0) {
+
+                panelTable.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="6"
+                            class="empty"
+                        >
+                            No panel members found.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            members.forEach(
+                member => {
+
+                    panelTable.innerHTML += `
+
+                        <tr>
+
+                            <td>
+                                ${member.id}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    ${member.name || "N/A"}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${member.email || "N/A"}
+                            </td>
+
+                            <td>
+                                ${member.department || "N/A"}
+                            </td>
+
+                            <td>
+                                ${member.role || "N/A"}
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="delete-button"
+                                    onclick="deletePanelMember(${member.id})"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            panelTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="6"
+                        class="empty"
+                    >
+                        Unable to load panel members.
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    /* CREATE PANEL MEMBER */
+
+    panelForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            message.textContent = "";
+
+            message.className =
+                "message";
+
+
+            const memberData = {
+
+                name:
+                    document.getElementById(
+                        "name"
+                    ).value.trim(),
+
+                email:
+                    document.getElementById(
+                        "email"
+                    ).value.trim(),
+
+                department:
+                    document.getElementById(
+                        "department"
+                    ).value.trim(),
+
+                role:
+                    document.getElementById(
+                        "role"
+                    ).value.trim()
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/panel-members",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    memberData
+                                )
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+                    throw new Error(
+                        errorText ||
+                        "Failed to create panel member"
+                    );
+
+                }
+
+
+                message.textContent =
+                    "Panel member added successfully.";
+
+                message.className =
+                    "message success";
+
+
+                panelForm.reset();
+
+
+                await loadPanelMembers();
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "Unable to add panel member.";
+
+                message.className =
+                    "message error";
+
+            }
+
+        }
+    );
+
+
+    /* DELETE PANEL MEMBER */
+
+    async function deletePanelMember(id) {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this panel member?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/panel-members/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to delete panel member"
+                );
+
+            }
+
+
+            await loadPanelMembers();
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Unable to delete panel member."
+            );
+
+        }
+
+    }
+
+
+    /* INITIAL LOAD */
+
+    loadPanelMembers();
+
+</script>
+
+</body>
+</html>

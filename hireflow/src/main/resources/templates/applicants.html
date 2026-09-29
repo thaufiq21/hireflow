@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hireflow - Applicants</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #172b4d;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #172b4d;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #2f6df6;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #dbe4f2;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2f6df6;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .topbar p {
+            color: #718096;
+            font-size: 15px;
+        }
+
+        .admin {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            font-weight: bold;
+        }
+
+        /* FORM */
+
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d7dee9;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2f6df6;
+        }
+
+        .button-row {
+            margin-top: 20px;
+        }
+
+        .primary-button {
+            border: none;
+            background: #2f6df6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .primary-button:hover {
+            background: #1f56d1;
+        }
+
+        /* TABLE */
+
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            text-align: left;
+            color: #718096;
+            font-size: 13px;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 14px;
+        }
+
+        .status {
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .applied {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .shortlisted {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .interview {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .selected {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .resume-link {
+            color: #2f6df6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .resume-link:hover {
+            text-decoration: underline;
+        }
+
+        .delete-button {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .delete-button:hover {
+            background: #fecaca;
+        }
+
+        .empty {
+            text-align: center;
+            color: #718096;
+            padding: 35px;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .menu a {
+                font-size: 11px;
+                padding: 12px 5px;
+                text-align: center;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+
+            .topbar h1 {
+                font-size: 25px;
+            }
+
+            .admin {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Hire<span>flow</span>
+        </div>
+
+        <div class="menu">
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/jobs">
+                Job Openings
+            </a>
+
+            <a href="/applicants" class="active">
+                Applicants
+            </a>
+
+            <a href="/panel-members">
+                Interview Panel
+            </a>
+
+            <a href="/interviews">
+                Interviews
+            </a>
+
+            <a href="/feedback">
+                Feedback
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Applicants
+                </h1>
+
+                <p>
+                    Manage candidates and application information
+                </p>
+
+            </div>
+
+            <div class="admin">
+                Admin
+            </div>
+
+        </div>
+
+
+        <!-- ADD APPLICANT -->
+
+        <div class="form-card">
+
+            <h2 class="section-title">
+                Add Applicant
+            </h2>
+
+            <form id="applicantForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="name">
+                            Full Name
+                        </label>
+
+                        <input
+                                type="text"
+                                id="name"
+                                placeholder="Enter applicant name"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email
+                        </label>
+
+                        <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter email address"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="phone">
+                            Phone
+                        </label>
+
+                        <input
+                                type="text"
+                                id="phone"
+                                placeholder="Enter phone number"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="jobOpeningId">
+                            Job Opening
+                        </label>
+
+                        <select
+                                id="jobOpeningId"
+                                required
+                        >
+
+                            <option value="">
+                                Select job opening
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            Application Status
+                        </label>
+
+                        <select id="status">
+
+                            <option value="APPLIED">
+                                APPLIED
+                            </option>
+
+                            <option value="SHORTLISTED">
+                                SHORTLISTED
+                            </option>
+
+                            <option value="INTERVIEW">
+                                INTERVIEW
+                            </option>
+
+                            <option value="SELECTED">
+                                SELECTED
+                            </option>
+
+                            <option value="REJECTED">
+                                REJECTED
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="resumeUrl">
+                            Resume URL
+                        </label>
+
+                        <input
+                                type="url"
+                                id="resumeUrl"
+                                placeholder="https://example.com/resume"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                            type="submit"
+                            class="primary-button"
+                    >
+                        Add Applicant
+                    </button>
+
+                </div>
+
+
+                <div
+                        id="message"
+                        class="message"
+                ></div>
+
+            </form>
+
+        </div>
+
+
+        <!-- APPLICANT LIST -->
+
+        <div class="table-card">
+
+            <h2 class="section-title">
+                Applicant List
+            </h2>
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Phone
+                    </th>
+
+                    <th>
+                        Job Opening
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Resume
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="applicantTable">
+
+                <tr>
+
+                    <td
+                            colspan="8"
+                            class="empty"
+                    >
+                        Loading applicants...
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const applicantForm =
+        document.getElementById(
+            "applicantForm"
+        );
+
+    const applicantTable =
+        document.getElementById(
+            "applicantTable"
+        );
+
+    const jobOpeningSelect =
+        document.getElementById(
+            "jobOpeningId"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    /* LOAD JOBS */
+
+    async function loadJobs() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/jobs"
+                );
+
+
+            if (!response.ok) {
+                throw new Error(
+                    "Failed to load jobs"
+                );
+            }
+
+
+            const jobs =
+                await response.json();
+
+
+            jobOpeningSelect.innerHTML = `
+                <option value="">
+                    Select job opening
+                </option>
+            `;
+
+
+            jobs
+                .filter(
+                    job =>
+                        job.status === "OPEN"
+                )
+                .forEach(job => {
+
+                    jobOpeningSelect.innerHTML += `
+
+                        <option value="${job.id}">
+                            ${job.title} - ${job.location || "N/A"}
+                        </option>
+
+                    `;
+
+                });
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
+
+    /* LOAD APPLICANTS */
+
+    async function loadApplicants() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/applicants"
+                );
+
+
+            if (!response.ok) {
+                throw new Error(
+                    "Failed to load applicants"
+                );
+            }
+
+
+            const applicants =
+                await response.json();
+
+
+            applicantTable.innerHTML = "";
+
+
+            if (applicants.length === 0) {
+
+                applicantTable.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="8"
+                            class="empty"
+                        >
+                            No applicants found.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            applicants.forEach(
+                applicant => {
+
+                    let statusClass = "";
+
+
+                    switch (
+                        applicant.status
+                        ) {
+
+                        case "APPLIED":
+                            statusClass =
+                                "applied";
+                            break;
+
+                        case "SHORTLISTED":
+                            statusClass =
+                                "shortlisted";
+                            break;
+
+                        case "INTERVIEW":
+                            statusClass =
+                                "interview";
+                            break;
+
+                        case "SELECTED":
+                            statusClass =
+                                "selected";
+                            break;
+
+                        case "REJECTED":
+                            statusClass =
+                                "rejected";
+                            break;
+
+                    }
+
+
+                    const jobTitle =
+                        applicant.jobOpening?.title
+                        || "N/A";
+
+
+                    const resume =
+                        applicant.resumeUrl;
+
+
+                    applicantTable.innerHTML += `
+
+                        <tr>
+
+                            <td>
+                                ${applicant.id}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    ${applicant.name || "N/A"}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${applicant.email || "N/A"}
+                            </td>
+
+                            <td>
+                                ${applicant.phone || "N/A"}
+                            </td>
+
+                            <td>
+                                ${jobTitle}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="status ${statusClass}"
+                                >
+                                    ${applicant.status || "N/A"}
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                ${
+                        resume
+                            ?
+                            `<a
+                                        class="resume-link"
+                                        href="${resume}"
+                                        target="_blank"
+                                    >
+                                        View Resume
+                                    </a>`
+                            :
+                            "Not Available"
+                    }
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="delete-button"
+                                    onclick="deleteApplicant(${applicant.id})"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            applicantTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="8"
+                        class="empty"
+                    >
+                        Unable to load applicants.
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    /* CREATE APPLICANT */
+
+    applicantForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            message.textContent = "";
+
+            message.className =
+                "message";
+
+
+            const applicantData = {
+
+                name:
+                    document.getElementById(
+                        "name"
+                    ).value.trim(),
+
+                email:
+                    document.getElementById(
+                        "email"
+                    ).value.trim(),
+
+                phone:
+                    document.getElementById(
+                        "phone"
+                    ).value.trim(),
+
+                resumeUrl:
+                    document.getElementById(
+                        "resumeUrl"
+                    ).value.trim(),
+
+                status:
+                document.getElementById(
+                    "status"
+                ).value,
+
+                jobOpeningId:
+                    Number(
+                        document.getElementById(
+                            "jobOpeningId"
+                        ).value
+                    )
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/applicants",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    applicantData
+                                )
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+                    throw new Error(
+                        errorText ||
+                        "Failed to create applicant"
+                    );
+
+                }
+
+
+                message.textContent =
+                    "Applicant added successfully.";
+
+                message.className =
+                    "message success";
+
+
+                applicantForm.reset();
+
+
+                document.getElementById(
+                    "status"
+                ).value = "APPLIED";
+
+
+                await loadApplicants();
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "Unable to add applicant. The email may already exist.";
+
+                message.className =
+                    "message error";
+
+            }
+
+        }
+    );
+
+
+    /* DELETE APPLICANT */
+
+    async function deleteApplicant(id) {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this applicant?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/applicants/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to delete applicant"
+                );
+
+            }
+
+
+            await loadApplicants();
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Unable to delete applicant."
+            );
+
+        }
+
+    }
+
+
+    /* INITIAL LOAD */
+
+    loadJobs();
+
+    loadApplicants();
+
+</script>
+
+</body>
+</html>

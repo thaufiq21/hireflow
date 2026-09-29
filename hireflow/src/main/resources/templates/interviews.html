@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hireflow - Interviews</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #172b4d;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #172b4d;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #2f6df6;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #dbe4f2;
+            padding: 13px 15px;
+            margin-bottom: 7px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2f6df6;
+            color: white;
+        }
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .topbar p {
+            color: #718096;
+            font-size: 15px;
+        }
+
+        .admin {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            font-weight: bold;
+        }
+
+        .form-card,
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 13px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-card {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d7dee9;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2f6df6;
+        }
+
+        .button-row {
+            margin-top: 20px;
+        }
+
+        .primary-button {
+            border: none;
+            background: #2f6df6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .primary-button:hover {
+            background: #1f56d1;
+        }
+
+        .table-card {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        th {
+            text-align: left;
+            color: #718096;
+            font-size: 13px;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 14px;
+        }
+
+        .status {
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .scheduled {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .completed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .cancelled {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .delete-button {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .delete-button:hover {
+            background: #fecaca;
+        }
+
+        .empty {
+            text-align: center;
+            color: #718096;
+            padding: 35px;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .menu a {
+                font-size: 11px;
+                padding: 12px 5px;
+                text-align: center;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 20px;
+            }
+
+            .topbar h1 {
+                font-size: 25px;
+            }
+
+            .admin {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Hire<span>flow</span>
+        </div>
+
+        <div class="menu">
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/jobs">
+                Job Openings
+            </a>
+
+            <a href="/applicants">
+                Applicants
+            </a>
+
+            <a href="/panel-members">
+                Interview Panel
+            </a>
+
+            <a href="/interviews" class="active">
+                Interviews
+            </a>
+
+            <a href="/feedback">
+                Feedback
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Interviews
+                </h1>
+
+                <p>
+                    Schedule and manage candidate interviews
+                </p>
+
+            </div>
+
+            <div class="admin">
+                Admin
+            </div>
+
+        </div>
+
+
+        <div class="form-card">
+
+            <h2 class="section-title">
+                Schedule Interview
+            </h2>
+
+            <form id="interviewForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="applicantId">
+                            Applicant
+                        </label>
+
+                        <select id="applicantId" required>
+
+                            <option value="">
+                                Select applicant
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="jobOpeningId">
+                            Job Opening
+                        </label>
+
+                        <select id="jobOpeningId" required>
+
+                            <option value="">
+                                Select job opening
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="panelMemberId">
+                            Interviewer
+                        </label>
+
+                        <select id="panelMemberId" required>
+
+                            <option value="">
+                                Select interviewer
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            Status
+                        </label>
+
+                        <select id="status">
+
+                            <option value="SCHEDULED">
+                                SCHEDULED
+                            </option>
+
+                            <option value="COMPLETED">
+                                COMPLETED
+                            </option>
+
+                            <option value="CANCELLED">
+                                CANCELLED
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interviewDate">
+                            Interview Date
+                        </label>
+
+                        <input
+                                type="date"
+                                id="interviewDate"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="startTime">
+                            Start Time
+                        </label>
+
+                        <input
+                                type="time"
+                                id="startTime"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="endTime">
+                            End Time
+                        </label>
+
+                        <input
+                                type="time"
+                                id="endTime"
+                                required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                            type="submit"
+                            class="primary-button"
+                    >
+                        Schedule Interview
+                    </button>
+
+                </div>
+
+
+                <div
+                        id="message"
+                        class="message"
+                ></div>
+
+            </form>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <h2 class="section-title">
+                Scheduled Interviews
+            </h2>
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Applicant
+                    </th>
+
+                    <th>
+                        Job
+                    </th>
+
+                    <th>
+                        Interviewer
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Start
+                    </th>
+
+                    <th>
+                        End
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="interviewTable">
+
+                <tr>
+
+                    <td
+                            colspan="9"
+                            class="empty"
+                    >
+                        Loading interviews...
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const interviewForm =
+        document.getElementById(
+            "interviewForm"
+        );
+
+    const interviewTable =
+        document.getElementById(
+            "interviewTable"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    const applicantSelect =
+        document.getElementById(
+            "applicantId"
+        );
+
+    const jobSelect =
+        document.getElementById(
+            "jobOpeningId"
+        );
+
+    const panelSelect =
+        document.getElementById(
+            "panelMemberId"
+        );
+
+
+    /* LOAD APPLICANTS */
+
+    async function loadApplicants() {
+
+        const response =
+            await fetch(
+                "/api/applicants"
+            );
+
+        const applicants =
+            await response.json();
+
+        applicantSelect.innerHTML = `
+            <option value="">
+                Select applicant
+            </option>
+        `;
+
+        applicants.forEach(
+            applicant => {
+
+                applicantSelect.innerHTML += `
+
+                    <option value="${applicant.id}">
+                        ${applicant.name} - ${applicant.email}
+                    </option>
+
+                `;
+
+            }
+        );
+
+    }
+
+
+    /* LOAD JOBS */
+
+    async function loadJobs() {
+
+        const response =
+            await fetch(
+                "/api/jobs"
+            );
+
+        const jobs =
+            await response.json();
+
+        jobSelect.innerHTML = `
+            <option value="">
+                Select job opening
+            </option>
+        `;
+
+        jobs
+            .filter(
+                job =>
+                    job.status === "OPEN"
+            )
+            .forEach(
+                job => {
+
+                    jobSelect.innerHTML += `
+
+                        <option value="${job.id}">
+                            ${job.title} - ${job.location || "N/A"}
+                        </option>
+
+                    `;
+
+                }
+            );
+
+    }
+
+
+    /* LOAD PANEL MEMBERS */
+
+    async function loadPanelMembers() {
+
+        const response =
+            await fetch(
+                "/api/panel-members"
+            );
+
+        const members =
+            await response.json();
+
+        panelSelect.innerHTML = `
+            <option value="">
+                Select interviewer
+            </option>
+        `;
+
+        members.forEach(
+            member => {
+
+                panelSelect.innerHTML += `
+
+                    <option value="${member.id}">
+                        ${member.name} - ${member.role || "N/A"}
+                    </option>
+
+                `;
+
+            }
+        );
+
+    }
+
+
+    /* LOAD INTERVIEWS */
+
+    async function loadInterviews() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/interviews"
+                );
+
+            if (!response.ok) {
+                throw new Error(
+                    "Failed to load interviews"
+                );
+            }
+
+            const interviews =
+                await response.json();
+
+            interviewTable.innerHTML = "";
+
+
+            if (interviews.length === 0) {
+
+                interviewTable.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="9"
+                            class="empty"
+                        >
+                            No interviews scheduled.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            interviews.forEach(
+                interview => {
+
+                    const applicantName =
+                        interview.applicant?.name
+                        || "N/A";
+
+                    const jobTitle =
+                        interview.jobOpening?.title
+                        || "N/A";
+
+                    const interviewer =
+                        interview.panelMembers?.length
+                            ? interview.panelMembers
+                                .map(
+                                    member =>
+                                        member.name
+                                )
+                                .join(", ")
+                            : "N/A";
+
+
+                    let statusClass = "";
+
+                    if (
+                        interview.status ===
+                        "SCHEDULED"
+                    ) {
+                        statusClass =
+                            "scheduled";
+                    }
+                    else if (
+                        interview.status ===
+                        "COMPLETED"
+                    ) {
+                        statusClass =
+                            "completed";
+                    }
+                    else if (
+                        interview.status ===
+                        "CANCELLED"
+                    ) {
+                        statusClass =
+                            "cancelled";
+                    }
+
+
+                    const start =
+                        interview.startTime
+                            ? interview.startTime
+                                .substring(0, 5)
+                            : "N/A";
+
+                    const end =
+                        interview.endTime
+                            ? interview.endTime
+                                .substring(0, 5)
+                            : "N/A";
+
+
+                    interviewTable.innerHTML += `
+
+                        <tr>
+
+                            <td>
+                                ${interview.id}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    ${applicantName}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${jobTitle}
+                            </td>
+
+                            <td>
+                                ${interviewer}
+                            </td>
+
+                            <td>
+                                ${interview.interviewDate || "N/A"}
+                            </td>
+
+                            <td>
+                                ${start}
+                            </td>
+
+                            <td>
+                                ${end}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="status ${statusClass}"
+                                >
+                                    ${interview.status || "N/A"}
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="delete-button"
+                                    onclick="deleteInterview(${interview.id})"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            interviewTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="9"
+                        class="empty"
+                    >
+                        Unable to load interviews.
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    /* CREATE INTERVIEW */
+
+    interviewForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            message.textContent = "";
+
+            message.className =
+                "message";
+
+
+            const startTime =
+                document.getElementById(
+                    "startTime"
+                ).value;
+
+            const endTime =
+                document.getElementById(
+                    "endTime"
+                ).value;
+
+
+            if (endTime <= startTime) {
+
+                message.textContent =
+                    "End time must be later than start time.";
+
+                message.className =
+                    "message error";
+
+                return;
+
+            }
+
+
+            const interviewData = {
+
+                applicantId:
+                    Number(
+                        applicantSelect.value
+                    ),
+
+                jobOpeningId:
+                    Number(
+                        jobSelect.value
+                    ),
+
+                panelMemberIds: [
+                    Number(
+                        panelSelect.value
+                    )
+                ],
+
+                interviewDate:
+                document.getElementById(
+                    "interviewDate"
+                ).value,
+
+                startTime:
+                    startTime + ":00",
+
+                endTime:
+                    endTime + ":00",
+
+                status:
+                document.getElementById(
+                    "status"
+                ).value
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/interviews",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    interviewData
+                                )
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text();
+
+                    throw new Error(
+                        errorText ||
+                        "Failed to schedule interview"
+                    );
+
+                }
+
+
+                message.textContent =
+                    "Interview scheduled successfully.";
+
+                message.className =
+                    "message success";
+
+
+                interviewForm.reset();
+
+
+                document.getElementById(
+                    "status"
+                ).value =
+                    "SCHEDULED";
+
+
+                await loadInterviews();
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "Unable to schedule interview. Check applicant, interviewer and time availability.";
+
+                message.className =
+                    "message error";
+
+            }
+
+        }
+    );
+
+
+    /* DELETE INTERVIEW */
+
+    async function deleteInterview(id) {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this interview?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/interviews/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to delete interview"
+                );
+
+            }
+
+
+            await loadInterviews();
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Unable to delete interview."
+            );
+
+        }
+
+    }
+
+
+    /* INITIAL LOAD */
+
+    async function initializePage() {
+
+        try {
+
+            await Promise.all([
+                loadApplicants(),
+                loadJobs(),
+                loadPanelMembers(),
+                loadInterviews()
+            ]);
+
+        }
+        catch (error) {
+
+            console.error(
+                "Page initialization error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    initializePage();
+
+</script>
+
+</body>
+</html>
